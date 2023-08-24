@@ -1,0 +1,20 @@
+<script setup>
+import { RouterLink, RouterView } from 'vue-router'
+</script>
+
+<template>
+  <header>
+    <ul class="nav justify-content-center fixed-top bg-light">
+      <li class="nav-item">
+        <RouterLink to="/" class="nav-link">Home</RouterLink>
+      </li>
+      <li class="nav-item">
+        <RouterLink to="/textEditor" class="nav-link">Text Editor</RouterLink>
+      </li>
+      <li class="nav-item">
+        <RouterLink :to="{ name: 'show' }" class="nav-link">Show</RouterLink>
+      </li>
+    </ul>
+  </header>
+  <RouterView />
+</template>
