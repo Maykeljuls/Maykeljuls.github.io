@@ -7,7 +7,8 @@
         v-model="content"
         :style="{
           'font-family': selectedFont,
-          'font-size': fontSize +'px'
+          'font-size': fontSize + 'px',
+          'font-weight': fontWeight
         }"
         readonly
       ></textarea>
@@ -66,6 +67,14 @@
             v-model="fontSize"
           />
         </div>
+        <button
+          type="button"
+          class="btn btn-secondary bi bi-type-bold"
+          data-bs-toggle="button"
+          aria-pressed="false"
+          autocomplete="off"
+          @click="applyBoldWeight"
+        ></button>
       </div>
     </div>
 
@@ -116,6 +125,8 @@ export default {
       alignment: 'text-center',
       selectedFont: 'Helvetica',
       fontSize: '30',
+      fontWeight: '',
+      fontWeightActive: false,
       searchTerm: '',
       fonts: [
         'Segoe UI',
@@ -159,8 +170,14 @@ export default {
       console.log('Applied font: ' + font)
       this.selectedFont = font
     },
-    font_size() {
-      return console.log(this.fontSize)
+
+    applyBoldWeight(){
+      if (this.fontWeightActive){
+        this.fontWeightActive = !this.fontWeightActive
+        return this.fontWeight = ''
+      }
+      this.fontWeightActive = !this.fontWeightActive
+      return this.fontWeight = 'bold'
     }
   }
 }
@@ -179,8 +196,8 @@ export default {
   height: 88vh;
   outline: none;
   border: none;
-  
-  &::-webkit-scrollbar{
+
+  &::-webkit-scrollbar {
     width: 0.5em;
   }
 }
