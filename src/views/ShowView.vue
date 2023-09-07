@@ -10,7 +10,7 @@
           'font-size': fontSize + 'px',
           'font-weight': fontWeight
         }"
-        readonly
+        :readonly="isReadonly"
       ></textarea>
     </div>
   </div>
@@ -73,7 +73,15 @@
           data-bs-toggle="button"
           aria-pressed="false"
           autocomplete="off"
-          @click="applyBoldWeight"
+          @click="toggleBoldWeight"
+        ></button>
+        <button
+          type="button"
+          class="btn btn-secondary bi bi-pencil-square"
+          data-bs-toggle="button"
+          aria-pressed="false"
+          autocomplete="off"
+          @click="toggleEdit"
         ></button>
       </div>
     </div>
@@ -128,6 +136,7 @@ export default {
       fontWeight: '',
       fontWeightActive: false,
       searchTerm: '',
+      isReadonly: true,
       fonts: [
         'Segoe UI',
         'Tahoma',
@@ -167,17 +176,15 @@ export default {
   },
   methods: {
     applyFont(font) {
-      console.log('Applied font: ' + font)
       this.selectedFont = font
     },
 
-    applyBoldWeight(){
-      if (this.fontWeightActive){
-        this.fontWeightActive = !this.fontWeightActive
-        return this.fontWeight = ''
-      }
+    toggleBoldWeight() {
       this.fontWeightActive = !this.fontWeightActive
-      return this.fontWeight = 'bold'
+      this.fontWeight = this.fontWeightActive ? 'bold' : ''
+    },
+    toggleEdit() {
+      this.isReadonly = !this.isReadonly
     }
   }
 }
