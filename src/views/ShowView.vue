@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid mt-4 p-0 bg-dark">
+  <div class="container-fluid mt-4 p-0 pt-1 bg-dark">
     <div class="d-flex p-0">
       <textarea
         class="no-resize container-fluid fixed-textarea-height bg-dark text-white-50"
@@ -176,9 +176,13 @@ export default {
 }
 
 .fixed-textarea-height {
-  height: 96vh;
+  height: 88vh;
   outline: none;
   border: none;
+  
+  &::-webkit-scrollbar{
+    width: 0.5em;
+  }
 }
 
 .font-list {
