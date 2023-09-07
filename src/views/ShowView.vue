@@ -4,7 +4,7 @@
       <textarea
         class="no-resize container-fluid fixed-textarea-height bg-dark text-white-50"
         :class="alignment"
-        v-model="content"
+        v-model="showContent"
         :style="{
           'font-family': selectedFont,
           'font-size': fontSize + 'px',
@@ -132,6 +132,7 @@ export default {
     return {
       alignment: 'text-center',
       selectedFont: 'Helvetica',
+      showContent: '',
       fontSize: '30',
       fontWeight: '',
       fontWeightActive: false,
@@ -180,13 +181,17 @@ export default {
     },
 
     toggleBoldWeight() {
-      this.fontWeightActive = !this.fontWeightActive
-      this.fontWeight = this.fontWeightActive ? 'bold' : ''
+      this.fontWeight = this.fontWeight === 'bold' ? '' : 'bold'
     },
+
     toggleEdit() {
       this.isReadonly = !this.isReadonly
     }
-  }
+  },
+
+  created() {
+      this.showContent = this.$route.query.content
+    }
 }
 </script>
 
