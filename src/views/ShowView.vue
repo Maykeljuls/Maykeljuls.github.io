@@ -65,6 +65,7 @@
             class="btn btn-lg btn-secondary font-size-btn"
             type="number"
             v-model="fontSize"
+            @change="setFontSize"
           />
         </div>
         <button
@@ -84,6 +85,18 @@
           @click="toggleEdit"
         ></button>
       </div>
+    </div>
+
+    <!-- Toggle auto Scroll -->
+    <div class="container d-flex justify-content-center">
+      <button
+        type="button btn-lg"
+        class="btn btn-lg btn-secondary bi bi-play-fill"
+        data-bs-toggle="button"
+        aria-pressed="false"
+        autocomplete="off"
+        @click="togglePlay"
+      ></button>
     </div>
 
     <!-- Alignment buttons -->
@@ -127,13 +140,15 @@
 </template>
 
 <script>
+import { useShowStore } from '../stores/showStore'
+
 export default {
   data() {
     return {
       alignment: 'text-center',
       selectedFont: 'Helvetica',
       showContent: '',
-      fontSize: '30',
+      fontSize: useShowStore().fontSize,
       fontWeight: '',
       fontWeightActive: false,
       searchTerm: '',
@@ -165,10 +180,6 @@ export default {
     }
   },
   computed: {
-    content() {
-      return this.$route.query.content || ''
-    },
-
     filteredFonts() {
       return this.fonts
         .filter((font) => font.toLowerCase().includes(this.searchTerm.toLowerCase()))
@@ -186,12 +197,18 @@ export default {
 
     toggleEdit() {
       this.isReadonly = !this.isReadonly
+      if (this.isReadonly) {
+        console.log('Saved edit...')
+        useShowStore().text = this.showContent
+      }
+    },
+    setFontSize() {
+      useShowStore().fontSize = this.fontSize
     }
   },
-
   created() {
-      this.showContent = this.$route.query.content
-    }
+    return (this.showContent = useShowStore().text)
+  }
 }
 </script>
 
@@ -205,7 +222,7 @@ export default {
 }
 
 .fixed-textarea-height {
-  height: 88vh;
+  height: 89.4vh;
   outline: none;
   border: none;
 
