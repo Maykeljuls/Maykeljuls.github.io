@@ -6,7 +6,7 @@ import { RouterLink, RouterView } from 'vue-router'
 
 <template>
   <header>
-    <ul class="nav justify-content-center fixed-top bg-dark">
+    <ul class="nav justify-content-center fixed-top bg-black">
       <li class="nav-item">
         <RouterLink to="/" class="nav-link">Text Editor</RouterLink>
       </li>

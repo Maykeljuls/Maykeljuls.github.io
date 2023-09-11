@@ -1,9 +1,10 @@
 <template>
-  <div class="container-fluid mt-4 p-0 pt-1 bg-dark">
+  <div class="container-fluid mt-4 p-0 pt-1 bg-black">
     <div class="d-flex p-0">
       <textarea
-        class="no-resize container-fluid fixed-textarea-height bg-dark text-white-50"
-        :class="alignment"
+        ref="textarea"
+        class="no-resize container-fluid fixed-textarea-height bg-black text-white"
+        :class="{ [alignment]: true, scrolling: !paused }"
         v-model="showContent"
         :style="{
           'font-family': selectedFont,
@@ -16,7 +17,7 @@
   </div>
 
   <!-- Bottom Menu -->
-  <div class="container-fluid d-flex fixed-bottom justify-content-between bg-dark p-2">
+  <div class="container-fluid d-flex fixed-bottom justify-content-between bg-black p-2">
     <div class="container-fluid d-flex">
       <div class="dropup d-flex btn-group btn-group-lg">
         <!-- Selected Font box -->
@@ -60,9 +61,7 @@
 
         <div class="btn-group btn-group-lg">
           <input
-            name=""
-            id=""
-            class="btn btn-lg btn-secondary font-size-btn"
+            class="btn btn-lg btn-secondary num-btn"
             type="number"
             v-model="fontSize"
             @change="setFontSize"
@@ -87,15 +86,16 @@
       </div>
     </div>
 
-    <!-- Toggle auto Scroll -->
+    <!-- Play button -->
     <div class="container d-flex justify-content-center">
       <button
-        type="button btn-lg"
-        class="btn btn-lg btn-secondary bi bi-play-fill"
+        type="button"
+        class="btn btn-secondary btn-lg bi"
+        :class="{ 'bi-pause-fill': !paused, 'bi-play-fill': paused}"
         data-bs-toggle="button"
         aria-pressed="false"
         autocomplete="off"
-        @click="togglePlay"
+        @click="toggleScrolling"
       ></button>
     </div>
 
@@ -135,12 +135,20 @@
           <label class="btn btn-outline-secondary bi bi-text-right" for="btncheck3"></label>
         </div>
       </div>
+
+      <!-- Animation Speed -->
+      <input
+        class="btn btn-secondary btn-lg num-btn me-2"
+        type="number"
+        v-model="scrollSpeed"
+        @change="setScrollSpeed"
+      />
     </div>
   </div>
 </template>
 
 <script>
-import { useShowStore } from '../stores/showStore'
+import { useShowStore as useStore } from '../stores/showStore'
 
 export default {
   data() {
@@ -148,11 +156,13 @@ export default {
       alignment: 'text-center',
       selectedFont: 'Helvetica',
       showContent: '',
-      fontSize: useShowStore().fontSize,
+      fontSize: useStore().fontSize,
+      scrollSpeed: useStore().scrollSpeed,
       fontWeight: '',
       fontWeightActive: false,
       searchTerm: '',
       isReadonly: true,
+      paused: true,
       fonts: [
         'Segoe UI',
         'Tahoma',
@@ -179,6 +189,7 @@ export default {
       ]
     }
   },
+
   computed: {
     filteredFonts() {
       return this.fonts
@@ -199,15 +210,51 @@ export default {
       this.isReadonly = !this.isReadonly
       if (this.isReadonly) {
         console.log('Saved edit...')
-        useShowStore().text = this.showContent
+        useStore().text = this.showContent
       }
     },
+
     setFontSize() {
-      useShowStore().fontSize = this.fontSize
-    }
+      useStore().fontSize = this.fontSize
+    },
+
+    setScrollSpeed() {
+      useStore().scrollSpeed = this.scrollSpeed
+    },
+    scrollDown() {
+      const textarea = this.$refs.textarea
+      const scrollSpeed = useStore().scrollSpeed
+
+      textarea.scrollTop += scrollSpeed
+      if (!this.paused && textarea.scrollTop < textarea.scrollHeight - textarea.clientHeight) {
+        requestAnimationFrame(this.scrollDown)
+      }
+    },
+    toggleScrolling() {
+        this.paused = !this.paused
+
+        if (!this.paused) {
+          this.scrollDown()
+          console.log('Scrolling...')
+        }
+    },
+
+    handleKeyPress(event) {
+      if (event.key === ' ' || event.key === 'Spacebar') {
+        event.preventDefault()
+        this.toggleScrolling()
+      }
+    },
   },
   created() {
-    return (this.showContent = useShowStore().text)
+    this.showContent = useStore().text
+    document.addEventListener('keydown', this.handleKeyPress)
+  },
+  unmounted() {
+    document.removeEventListener('keydown', this.handleKeyPress)
+  },
+  mounted() {
+    this.startScrolling
   }
 }
 </script>
@@ -217,7 +264,7 @@ export default {
   resize: none;
 }
 
-.font-size-btn {
+.num-btn {
   width: 83px;
 }
 
@@ -229,6 +276,10 @@ export default {
   &::-webkit-scrollbar {
     width: 0.5em;
   }
+}
+
+.fixed-textarea-height.scrolling {
+  transform: translateY();
 }
 
 .font-list {
