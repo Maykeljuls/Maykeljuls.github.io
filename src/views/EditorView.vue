@@ -1,16 +1,18 @@
 <template>
-  <div class="container mt-5">
-    <h1>Text editor here</h1>
-    <div class="mb-3 col-5">
-      <label for="" class="form-label">Enter lyrics</label>
+  <div class="container-sm container-fluid d-flex justify-content-center pt-5">
+    <div class="col-sm-4">
+      <h1>Text editor here</h1>
       <textarea
-        class="form-control narrow-textbox"
+        class="form-control form-control-sm"
         v-model="inputText"
         type="text"
-        rows="10"
+        rows="20"
+        placeholder="Enter text..."
       ></textarea>
-      <br>
-      <a @click="submitText" class="btn btn-primary" role="button">Show</a>
+
+      <div class="container d-flex flex-row-reverse p-0 pt-2">
+        <a @click="submitText" class="btn btn-primary" role="button">Show</a>
+      </div>
     </div>
   </div>
 </template>
@@ -33,5 +35,4 @@ const submitText = () => {
     router.push({ name: 'show' })
   }
 }
-
 </script>

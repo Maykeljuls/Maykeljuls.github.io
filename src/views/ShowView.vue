@@ -1,6 +1,6 @@
 <template>
-  <div class="container-fluid mt-4 p-0 pt-1 bg-black">
-    <div class="d-flex p-0">
+  <div class="container-fluid bg-black">
+    <div class="d-flex">
       <textarea
         ref="textarea"
         class="no-resize container-fluid fixed-textarea-height bg-black text-white"
@@ -91,7 +91,7 @@
       <button
         type="button"
         class="btn btn-secondary btn-lg bi"
-        :class="{ 'bi-pause-fill': !paused, 'bi-play-fill': paused}"
+        :class="{ 'bi-pause-fill': !paused, 'bi-play-fill': paused }"
         data-bs-toggle="button"
         aria-pressed="false"
         autocomplete="off"
@@ -231,20 +231,24 @@ export default {
       }
     },
     toggleScrolling() {
-        this.paused = !this.paused
+      this.paused = !this.paused
 
-        if (!this.paused) {
-          this.scrollDown()
-          console.log('Scrolling...')
-        }
+      if (!this.paused) {
+        this.scrollDown()
+        console.log('Scrolling...')
+      }
     },
 
     handleKeyPress(event) {
-      if (event.key === ' ' || event.key === 'Spacebar') {
-        event.preventDefault()
-        this.toggleScrolling()
+      if (!this.isReadonly) {
+        console.log('Editing')
+      } else {
+        if (event.key === ' ' || event.key === 'Spacebar') {
+          event.preventDefault()
+          this.toggleScrolling()
+        }
       }
-    },
+    }
   },
   created() {
     this.showContent = useStore().text
@@ -269,7 +273,7 @@ export default {
 }
 
 .fixed-textarea-height {
-  height: 89.4vh;
+  height: 92vh;
   outline: none;
   border: none;
 
